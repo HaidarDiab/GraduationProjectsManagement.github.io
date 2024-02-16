@@ -1,0 +1,40 @@
+﻿@page "/DisplayMails"
+@inherits DisplayMailsBase
+@attribute [Authorize]
+
+
+<div class="mb-3 form-group">
+    <h5 class="shadow-lg card-header">صندوق البريد</h5>
+
+    <hr class="shadow-lg" />
+</div>
+
+@if (CurrentUser.IsInRole("Admin") || CurrentUser.IsInRole("Supervisor") || CurrentUser.IsInRole("Student"))
+{
+    <div>
+        <div class="mb-1 form-group shadow-lg card-header alert alert-light">
+            <a class="btn btn-outline-primary alert-primary shadow" href="/SendEmail">أرسل إيميل</a>
+            <a class="btn btn-outline-primary alert-primary shadow" role="button" @onclick="ViewSentMails" id="@ButtonId">البريد المرسل</a>
+            <a class="btn btn-outline-primary  alert-primary shadow" @onclick="ViewReceivedMails" id="@ButtonId">البريد الوارد</a>
+        </div>
+
+        <div>
+            @if (ButtonId == "SentMails") 
+            {
+                <DisplaySpecificMailsType SentMails="@SentMails" ButtonId="@ButtonId" ReceivedMails="null"></DisplaySpecificMailsType>
+            }
+
+            else if (ButtonId == "ReceivedMails")
+            {
+                <DisplaySpecificMailsType ReceivedMails="@ReceivedMails" ButtonId="@ButtonId" SentMails="null"></DisplaySpecificMailsType>
+            }
+        </div>
+
+    </div>
+}
+
+else
+{
+    <div class="card alert-danger btn-outline-warning">يجب أن تنتظر حتى يتم منحك صلاحيات من قبل الآدمن</div>
+
+}

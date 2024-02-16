@@ -1,0 +1,87 @@
+﻿@page "/ManageUsers"
+@inherits ManageUsersBase
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="mb-5 form-group">
+    <h5 class="shadow-lg card-header">إدارة المستخدمين</h5>
+
+    <hr class="shadow-lg" />
+</div>
+
+@if (Users == null)
+{
+    <h5>لا يوجد مستخدمين حتى الآن</h5>
+}
+
+else
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-2">
+
+            </div>
+
+            <div class="col-xl-10 card shadow alert-primary" style="overflow-x: auto">
+            
+                <table class="table table-responsive table-bordered text-center shadow overflow-auto">
+                    <thead class="card-header shadow">
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>الدور</td>
+                            <td>اسم المستخدم</td>
+                            <td>الإيميل</td>
+                            <td>#</td>
+                        </tr>
+
+                    </thead>
+                    @foreach (var item in Users)
+                    {
+
+                        <tbody>
+                                <tr>
+                                <td>
+                                    <a class="btn btn-outline-danger card" role="button" @onclick="() => Delete(item.Id)">حذف المستخدم</a>
+                                </td>
+
+                                <td>
+                                    <a class="btn btn-outline-warning card" role="button" @onclick="() => RoleCancel(item.Id)">إلغاء الدور</a>
+                                </td>
+
+                                @if (!UsersRoles.Any(us => us.UserId == item.Id))
+                                {
+                                <td>
+                                        <a href="/GiveRoleToUser/@item.Id" class="btn btn-outline-primary card" role="button">إضافة دور</a>
+                                </td>
+
+                                    <td>لا يوجد له دور  حتى الآن</td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <a href="/GiveRoleToUser/@item.Id" class="btn btn-outline-success card" role="button">تحديث الدور</a>
+
+                                    </td>
+                                    
+                                <td>@GetRoleName(item.Id)</td>
+                                }
+                                <td>@item.UserName</td>
+                                <td>@item.Email</td>
+                                    
+                                <td class="showing">
+                                    
+                                </td>
+
+                            </tr>
+                            
+                        </tbody>
+                    }
+                </table>
+
+
+            </div>
+        </div>
+    </div>
+}
+

@@ -1,0 +1,81 @@
+﻿@page "/DisplayMyProjectGroups/{currentUserId}"
+@inherits DisplayMyProjectGroupsBase
+@attribute [Authorize]
+
+
+<div class="mb-5 form-group">
+    <h5 class="shadow-lg card-header">مجموعاتي</h5>
+    <h5 class="pagination shadow">
+        <a href="/DisplayProjectsGroups" class="card shadow alert-danger btn btn-outline-dark">المجموعات</a>
+    </h5>
+    <hr class="shadow-lg" />
+</div>
+
+
+
+ @if (!ProjectsGroups.Any())
+{
+    <h5>لا يوجد مجموعات حتى الآن</h5>
+}
+
+
+
+<div class="row mt-2 shadow">
+
+    @foreach (var item in MyProjectsGroups)
+    {
+        <div class="col-xl-6 mb-3 shadow border border-white">
+
+
+            <a href="/DisplayProjectsGroups" class="btn alert-primary card shadow" role="button">
+                <div class="card card-group">
+
+                    <div class="card-body shadow">
+                        <b>@item.Name</b>
+                    </div>
+                </div>
+            </a>
+
+            <div class="card btn alert-primary shadow">
+
+                <table class="table table-responsive shadow">
+                    <thead class="float-child-right shadow">
+
+                        <tr class="row-cols-3">
+                            <td class="col-xl-3">المشروع</td>
+                        </tr>
+
+                        <tr class="row-cols-3">
+                            <td class="col-xl-3">المشرف</td>
+                        </tr>
+                        <tr class="row-cols-3">
+                            <td class="col-xl-3">عدد المشاركين</td>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody class="float-child-left shadow table-responsive">
+                        <tr class="row-cols-xxl-6 tr-table">
+                            <td class="table-td">@Projects.FirstOrDefault(p => p.Id == item.ProjectId).Title</td>
+                        </tr>
+
+                        <tr class="row-cols-xxl-6 tr-table">
+                            <td class="table-td">@Supervisors.FirstOrDefault(s => s.Id == item.SupervisorId).UserName</td>
+                        </tr>
+
+                        <tr class="row-cols-xxl-6 tr-table">
+                            <td class="table-td">@StudentsGroups.Where(s => s.ProjectGroupId == item.Id).Count()<span class="alert-danger"><b class="text-lg-center"> / 3</b></span></td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+
+           
+
+        </div>
+    }
+
+</div>
+<hr class="shadow-lg" />

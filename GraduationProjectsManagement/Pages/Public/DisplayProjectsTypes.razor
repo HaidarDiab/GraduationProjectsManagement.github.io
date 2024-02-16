@@ -1,0 +1,42 @@
+﻿@page "/DisplayProjectTypes"
+@inherits DisplayProjectsTypesBase
+@attribute [Authorize]
+
+
+<div class="mb-5 form-group">
+<h5 class="shadow-lg card-header"> فئات المشاريع</h5>
+    <h5 class="pagination">
+        <a href="/AddProjectType" class="btn btn-outline-primary">إضافة فئة مشروع</a>
+    </h5>
+<hr class="shadow-lg" />
+</div>
+
+
+
+
+<div class="row mt-2 shadow">
+
+    @foreach (var type in ProjectTypes)
+    {
+
+        <div class="col-md-4 mb-5 shadow border border-white">
+            <i class="btn alert-primary card shadow">@type.Id</i>
+
+            <div class="card btn alert-primary shadow">
+                <div class="card-body">
+                    <div class="card mb-1">
+
+                        <b class="alert-heading mb-1 border table-bordered">@type.Type</b>
+                    </div>
+
+                    <a href="/UpdateProjectType/@type.Id" class="btn btn-outline-primary col-3 card" role="button">تعديل</a>
+                    <a href="" class="btn btn-outline-danger col-3 card" role="button" @onclick="() => Delete(type.Id) ">حذف</a>
+                </div>
+            </div>
+
+        </div>
+
+    }
+
+
+    </div>

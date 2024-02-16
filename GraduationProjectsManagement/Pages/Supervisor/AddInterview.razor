@@ -1,0 +1,54 @@
+﻿@page "/AddInterview"
+@page "/UpdateInterview/{InterviewId:int}"
+@inherits AddInterviewBase
+@attribute [Authorize(Roles ="Supervisor")]
+
+
+<div class="mb-5 form-group">
+    <h5 class="shadow-lg card-header">@Title </h5>
+
+    <hr class="shadow-lg" />
+</div>
+
+
+<EditForm Model="@Interview" OnValidSubmit="Save" class="offset-lg-8">
+
+    <DataAnnotationsValidator />
+
+
+    <div class="mb-3">
+        <label for="StudentGroupId" class="form-label">المجموعة</label>
+        <div class="shadow-lg">
+            <SfDropDownList TItem="StudentGroup" TValue="int" DataSource="@StudentGroups" Placeholder="اختر مجموعة...." @bind-Value="@Interview.StudentGroupId">
+                <DropDownListFieldSettings Text="Name" Value="Id">
+                </DropDownListFieldSettings>
+            </SfDropDownList>
+            
+        </div>
+        <ValidationMessage For="@(() => Interview.StudentGroupId)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="InterviewDate" class="form-label">تاريخ المقابلة</label>
+        <div class="shadow-lg">
+            <InputDate Type="InputDateType.Date" class="form-control" @bind-Value="Interview.InterviewDate" />
+        </div>
+        <ValidationMessage For="@(() => Interview.InterviewDate)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="InterviewTime" class="form-label">توقيت المقابلة</label>
+        <div class="shadow-lg">
+            <InputDate Type="InputDateType.Time" class="form-control" @bind-Value="Interview.InterviewTime" />
+        </div>
+        <ValidationMessage For="@(() => Interview.InterviewTime)" />
+    </div>
+
+
+    <div class="form-group mb-5">
+        <button type="submit" class="btn btn-primary">حفظ</button>
+        <button class="btn btn-dark btn-outline-warning" @onclick="Cancel">إلغاء</button>
+    </div>
+</EditForm>
+
+

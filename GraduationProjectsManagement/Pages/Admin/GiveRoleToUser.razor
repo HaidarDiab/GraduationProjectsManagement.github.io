@@ -1,0 +1,35 @@
+﻿@page "/GiveRoleToUser/{UserId}"
+@inherits GiveRoleToUserBase
+
+<div class="mb-5 form-group">
+    <h5 class="shadow-lg card-header">@Title </h5>
+
+    <hr class="shadow-lg" />
+</div>
+
+
+<div class="shadow card card-header mb-5 text-center">
+    <h5>@User.UserName</h5>
+    <h6>@UserId</h6>
+</div>
+
+<EditForm Model="@UserRole" OnValidSubmit="Save" class="offset-lg-8 card card-body">
+
+    <DataAnnotationsValidator />
+
+    <div class="mb-3 card card-header">
+        <label for="Id" class="form-label">الدور</label>
+        <div class="shadow-lg">
+            <SfDropDownList TItem="IdentityRole" TValue="string" DataSource="@Roles" Placeholder="اختر دور...." @bind-Value="@Role.Id">
+                <DropDownListFieldSettings Text="Name" Value="Id">
+                </DropDownListFieldSettings>
+            </SfDropDownList>
+        </div>
+        <ValidationMessage For="@(() => Role.Id)" />
+    </div>
+    <p>@Role.Id</p>
+    <div class="form-group mb-5">
+        <button type="submit" class="btn btn-primary">حفظ</button>
+        <a class="btn btn-dark btn-outline-warning" @onclick="Cancel">إلغاء</a>
+    </div>
+</EditForm>

@@ -1,0 +1,139 @@
+﻿@using System.Collections.Generic
+@using GraduationProjectsManagement.Repositories.Cotracts;
+@inject IMailRepository MailRepository
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+<table class="shadow table tab-content table-hover table-striped alert alert-light" style="overflow-x: auto">
+
+    @if (ButtonId == "SentMails")
+    {
+        <thead>
+            <tr>
+                <td></td>
+                <td>التاريخ</td>
+                <td>الموضوع</td>
+                <td>إلى</td>
+                <td>#</td>
+            </tr>
+        </thead>
+
+        @if (!SentMails.Any())
+        {
+            <caption class="card shadow alert-danger text-danger text-center">صندوق البريد المرسل فارغ</caption>
+        }
+
+        else
+        {
+            @foreach (var item in SentMails)
+            {
+                <tbody>
+                    <tr>
+                        <td>
+                            <a class="btn btn-outline-danger" role="button" @onclick="() => Delete(item.Id)">حذف</a>
+                            <a class="btn btn-outline-info" role="button" href="/DisplayMailDetails/@item.Id/@ButtonId">فتح</a>
+                        </td>
+                        <td>@item.SentDate.ToString("f")</td>
+                        <td>@item.Subject</td>
+                        <td>@item.To</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            }
+        }
+
+    }
+
+    else if (ButtonId == "ReceivedMails")
+    {
+        <thead>
+            <tr>
+                <td></td>
+                <td>التاريخ</td>
+                <td>الموضوع</td>
+                <td>من</td>
+                <td>#</td>
+            </tr>
+        </thead>
+
+        @if (!ReceivedMails.Any())
+        {
+            <caption class="card shadow alert-danger text-danger text-center">صندوق البريد الوارد فارغ</caption>
+        }
+
+        else
+        {
+
+            @foreach (var item in ReceivedMails)
+            {
+                <tbody>
+                    <tr>
+                        <td>
+                            <a class="btn btn-outline-danger" role="button" @onclick="() => Delete(item.Id)">حذف</a>
+                            <a class="btn btn-outline-info" role="button" href="/DisplayMailDetails/@item.Id/@ButtonId">فتح</a>
+                        </td>
+                        <td>@item.ReceiveDate.ToString("f")</td>
+                        <td>@item.Subject</td>
+                        <td>@item.From</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            }
+
+        }
+    }
+
+    
+
+</table>
+
+
+
+@code {
+
+
+    [Parameter]
+    public string ButtonId { get; set; }
+
+
+    [Parameter]
+    public IEnumerable<SentMail> SentMails { get; set; }
+
+    [Parameter]
+    public IEnumerable<ReceivedMail> ReceivedMails { get; set; }
+
+
+    public string? parameterForOpenButton { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+
+    }
+
+
+    protected async Task Delete(int mailId)
+    {
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "هل أنت متأكد من إكمال عملية الحذف؟");
+
+        var sentMails = await MailRepository.GetSentMails();
+        var receivedMails = await MailRepository.GetReceivedMails();
+
+        try
+        {
+            if (sentMails.Any(m => m.Id == mailId) || receivedMails.Any(m => m.Id == mailId))
+            {
+                await MailRepository.RemoveMail(mailId);
+                await JSRuntime.InvokeVoidAsync("alert", "تمت عملية الحذف بنجاح");
+                NavigationManager.NavigateTo("/DisplaySpecificMailsType");
+            }
+        }
+        catch (Exception)
+        {
+
+            await JSRuntime.InvokeVoidAsync("alert", "العنصر غير متوفر");
+            NavigationManager.NavigateTo("/DisplaySpecificMailsType");
+        }
+
+    }
+
+}

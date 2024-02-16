@@ -1,0 +1,71 @@
+﻿@page "/AddProposalProject"
+@page "/UpdateProject/{ProjectId:int}"
+@attribute [Authorize]
+@inherits AddProposalProjectBase
+
+<div class="mb-5 form-group">
+    <h5 class="shadow-lg card-header">@Title</h5>
+
+    <hr class="shadow-lg" />
+</div>
+
+@if (User.IsInRole("Admin") || User.IsInRole("Supervisor") || User.IsInRole("Student"))
+{
+
+    <EditForm Model="@Project" OnValidSubmit="Save" class="offset-lg-8">
+
+        <DataAnnotationsValidator />
+
+        <div class="mb-3">
+            <label for="Title" class="form-label">عنوان المشروع</label>
+            <div class="shadow-lg">
+                <InputText class="form-control" @bind-Value="Project.Title" />
+            </div>
+            <ValidationMessage For="@(() => Project.Title)" />
+        </div>
+
+        <div class="mb-3">
+            <label for="Description" class="form-label">الوصف</label>
+            <div class="shadow-lg">
+                <InputText class="form-control" @bind-Value="Project.Description" />
+            </div>
+            <ValidationMessage For="@(() => Project.Description)" />
+        </div>
+
+
+        <div class="mb-3">
+            <label for="ProjectCategoryId" class="form-label">التصنيف</label>
+            <div class="shadow-lg">
+                <SfDropDownList TItem="ProjectCategory" TValue="int" DataSource="@ProjectCategories" Placeholder="اختر تصنيف...." @bind-Value="@Project.ProjectCategoryId">
+                    <DropDownListFieldSettings Text="Name" Value="Id">
+                    </DropDownListFieldSettings>
+                </SfDropDownList>
+
+            </div>
+            <ValidationMessage For="@(() => Project.ProjectCategoryId)" />
+        </div>
+
+
+        <div class="mb-3">
+            <label for="ImageFile" class="form-label">صورة</label>
+            <div class="shadow-lg">
+                <InputFile class="form-control" title="صورة المشروع" OnChange="LoadImage"></InputFile>
+            </div>
+            <ValidationMessage For="@(() => Project.ImageFile)" />
+        </div>
+
+
+        <div class="form-group mb-5">
+            <button type="submit" class="btn btn-primary">حفظ</button>
+            <button class="btn btn-light" @onclick="Cancel">إلغاء</button>
+        </div>
+
+    </EditForm>
+
+}
+
+else
+{
+    <div class="card alert-danger btn-outline-warning">يجب أن تنتظر حتى يتم منحك صلاحيات من قبل الآدمن</div>
+
+}

@@ -1,0 +1,36 @@
+﻿@page "/AddProjectType"
+@page "/UpdateProjectType/{id:int}"
+@inherits AddProjectTypeBase
+@using GraduationProjectsManagement.Pages.Public
+@attribute [Authorize(Roles = "Admin")]
+
+
+<h5 class="shadow-lg">@Title</h5>
+<hr class="shadow-lg" />
+
+
+<EditForm Model="@Project" OnValidSubmit="Save" class="offset-lg-8">
+
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label for="Type" class="form-label">نوع المشروع</label>
+        <div class="shadow-lg">
+            <InputText class="form-control" @bind-Value="Project.Type" />
+        </div>
+        <ValidationMessage For="@(() => Project.Type)" />
+    </div>
+
+
+    <div class="mb-3">
+        <p class="alert-success">@Message</p>
+    </div>
+
+
+
+    <div class="form-group mb-5">
+        <button type="submit" class="btn btn-primary">حفظ</button>
+        <button class="btn btn-light" @onclick="Cancel">إلغاء</button>
+    </div>
+
+</EditForm>

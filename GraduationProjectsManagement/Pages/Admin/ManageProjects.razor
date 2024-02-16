@@ -1,0 +1,101 @@
+﻿@page "/ManageProjects"
+@using GraduationProjectsManagement.Pages.Public
+@inherits ManageProjectsBase
+@attribute [Authorize(Roles = "Admin")]
+
+
+<div class="mb-5 form-group">
+    <h5 class="shadow-lg card-header">إدارة المشاريع</h5>
+
+    <hr class="shadow-lg" />
+</div>
+
+
+@if (Projects == null)
+{
+    <h5>لا يوجد مشاريع حتى الآن</h5>
+}
+
+else
+{
+    <div class="container">
+        <div class="row">
+
+            <div class="col-xl-2">
+            </div>
+
+
+            <div class="col-md-10 card alert-primary shadow customeClassForMinimizeFontSizeIntable" style="overflow-x: auto">
+
+                <table class="table table-hover table-bordered text-center shadow border border-white">
+                    <thead class="shadow border border-white btn-outline-primary">
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>مجموعة المشروع</td>
+                            <td>وصف المشروع</td>
+                            <td>عنوان المشروع</td>
+                        </tr>
+
+                    </thead>
+                    @foreach (var item in Projects)
+                    {
+                        <tbody class="shadow border border-white">
+                            <tr>
+                                <td>
+                                    <a class="btn btn-outline-danger card customButtonAndAlinkFontSize" role="button" @onclick="() => Delete(item.Id)">حذف</a>
+                                </td>
+
+                                <td>
+                                    <a href="/UpdateProject/@item.Id" class="btn btn-outline-warning card customButtonAndAlinkFontSize" role="button">تعديل المشروع</a>
+                                </td>
+
+                                @if(item.IsSelected == false)
+                                {
+                                <td>
+                                        <a class="btn btn-outline-primary card customButtonAndAlinkFontSize" role="button" @onclick="() => SelectProjectInThisTerm(item.Id)">اختيار المشروع كمشروع معتمد هذا الفصل</a>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <a class="btn btn-outline-success card customButtonAndAlinkFontSize" role="button" @onclick="() => UnSelectProjectInThisTerm(item.Id)"> مشروع معتمد، اضغط للإلغاء </a>
+
+                                    </td>
+                                }
+
+
+                                @if (ProjectGroups.Any(pg => pg.ProjectId == item.Id))
+                                {
+                                    <td>
+                                        <a href="/UpdateGroup/@ProjectGroups.Where(pg => pg.ProjectId == item.Id).FirstOrDefault().Id" class="btn btn-outline-dark card customButtonAndAlinkFontSize" role="button">تعديل المجموعة</a>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+
+                                @if (ProjectGroups.Any(pg => pg.ProjectId == item.Id))  
+                                {
+                                    <td>@ProjectGroups.Where(pg => pg.ProjectId == item.Id).FirstOrDefault().Name</td>
+                                }
+                                else
+                                {
+                                    <td>لم تتم إضافة المشروع في مجموعة</td>
+                                }
+                                <td class="col-2">@item.Description</td>
+                                <td class="col-2">@item.Title</td>
+                            </tr>
+
+                        </tbody>
+                    }
+                </table>
+
+
+            </div>
+        </div>
+    </div>
+}

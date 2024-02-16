@@ -1,0 +1,54 @@
+﻿@page "/SearchResults"
+@using GraduationProjectsManagement.Repositories.Cotracts;
+@using GraduationProjectsManagement.Repositories;
+@inject ISearchRepository SearchRepository
+@inject NavigationManager Navigation
+@inject State State
+
+<div class="mb-5 form-group">
+    <h5 class="shadow-lg card-header">نتائج البحث</h5>
+
+    <hr class="shadow-lg" />
+</div>
+
+
+@if (State.Results == null)
+{
+    <p>جاري تحميل النتائج...</p>
+}
+else if (State.Results.Count == 0)
+{
+    <p>لا توجد نتائج مرتبطة بالبحث.</p>
+}
+else
+{
+    <div class="container card col-md-8 text-center">
+        @foreach (var result in State.Results)
+        {
+            <div class="card shadow alert-dark">
+                <a href="@result.Url" class="card shadow card-link border border-3 border-primary alert alert-primary">@result.Title</a>
+                <p class="card shadow alert-info">@result.Description</p>
+            </div>
+        }
+    </div>
+}
+
+@code {
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Get the query parameter value
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        if (Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query).TryGetValue("term", out var term))
+        {
+            // Decode and validate the term
+            var decodedTerm = System.Net.WebUtility.UrlDecode(term);
+
+            // Call the search service with the term
+            State.Results = await SearchRepository.SearchAsync(decodedTerm);
+        }
+
+    }
+
+}

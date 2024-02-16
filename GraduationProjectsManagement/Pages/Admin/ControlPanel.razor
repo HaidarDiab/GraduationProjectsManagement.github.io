@@ -1,0 +1,25 @@
+﻿@page "/ControlPanel"
+@inherits ControlPanelBase
+@attribute [Authorize(Roles = "Admin")]
+
+
+<div class="mb-5 form-group">
+    <h5 class="shadow-lg card-header">لوحة التحكم</h5>
+    <h5 class="pagination">
+        <a href="/ControlPanel" class="btn btn-outline-primary">لوحة التحكم</a>
+    </h5>
+    <hr class="shadow-lg" />
+</div>
+
+<div class="offset-8">
+    <div class="mb-3">
+        <a href="/ManageProjectsGroups" class="btn btn-outline-primary card mb-2">إدارة المجموعات</a>
+        <a href="/ManageProjects" class="btn btn-outline-primary card mb-2">إدارة المشاريع</a>
+        <a href="/DisplayProjectTypes" class="btn btn-outline-primary card mb-2">إدارة فئات المشاريع</a>
+        <a href="/DisplayProjectCategories" class="btn btn-outline-primary card mb-2">إدارة تصنيفات المشاريع</a>
+        <a href="/ManageUsers" class="btn btn-outline-primary card mb-2">إدارة المستخدمين </a>
+    </div>
+</div>
+
+
+

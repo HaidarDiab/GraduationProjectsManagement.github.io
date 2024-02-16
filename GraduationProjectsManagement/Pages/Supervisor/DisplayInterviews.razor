@@ -1,0 +1,110 @@
+﻿@page "/DisplayInterviews"
+@inherits DisplayInterviewsBase
+@attribute [Authorize]
+
+
+<div class="mb-5 form-group">
+    <h5 class="shadow-lg card-header">المقابلات</h5>
+    <h5 class="pagination">
+
+    <a class="btn btn-outline-primary alert-primary" href="/AddInterview">إضافة موعد مقابلة</a>
+    </h5>
+    <hr class="shadow-lg" />
+</div>
+
+
+    @if (Interviews == null)
+{
+    <h5>لا يوجد مقابلات حتى الآن</h5>
+}
+
+else
+{
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-2">
+            </div>
+
+
+            <div class="col-md-10 card alert-primary shadow customeClassForMinimizeFontSizeIntable" style="overflow-x: auto">
+
+                <table class="table table-hover table-bordered text-center shadow border border-white">
+                    <thead class="shadow border border-white btn-outline-primary">
+                        <tr>
+                          
+                                <td></td>
+                                <td></td>
+                            
+                            <td>طلاب المجموعة</td>
+                            <td>توقيت المقابلة</td>
+                            <td>تاريخ المقابلة</td>
+                            <td>مشرف المجموعة</td>
+                            <td>مجموعة المشروع</td>
+                            <td>عنوان المشروع</td>
+                        </tr>
+
+                    </thead>
+                    @foreach (var item in Interviews)
+                    {
+                        <tbody class="shadow border border-white">
+                            <tr>
+
+                                @if (CurrentUser.IsInRole("Supervisor") && Users.FirstOrDefault(u => u.Id == item.SupervisorId).Id == UserId)
+                                {
+                                   
+                                    <td>
+                                        <a class="btn btn-outline-danger card customButtonAndAlinkFontSize" role="button" @onclick="() => Delete(item.Id)">حذف</a>
+                                    </td>
+
+
+                                    <td>
+                                        <a href="/UpdateInterview/@item.Id" class="btn btn-outline-dark card customButtonAndAlinkFontSize" role="button">تعديل المقابلة</a>
+                                    </td>
+                                    }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                }
+                                
+
+
+
+                                <td>
+                                    <ul>
+                                        @foreach (var student in StudentGroups.Where(sg => sg.Id == item.StudentGroupId))
+                                        {
+                                            <li>@Users.FirstOrDefault(u => u.Id == student.StudentId).Email</li>
+                                        }
+                                    </ul>
+                                </td>
+
+                                <td>@item.InterviewTime.ToString("t")</td>
+                                <td>@item.InterviewDate.ToString("D")</td>
+
+                                @foreach (var supervisor in Users.Where(u => u.Id == item.SupervisorId))
+                                {
+                                    <td>@supervisor.Email</td>
+                                }
+
+                                @foreach (var projectGroup in GetProjectGroupFromInterviewStudentGroupIdAndStudentGroup(item.StudentGroupId).Result)
+                                {
+                                    <td>@projectGroup.Name</td>
+                                }
+
+                                @foreach (var project in GetProjectFromInterviewStudentGroupIdAndStudentGroupAndProjectGroup(item.StudentGroupId).Result)
+                                {
+                                    <td>@project.Title</td>
+                                }
+                            </tr>
+
+                        </tbody>
+                    }
+                </table>
+
+            </div>
+        </div>
+    </div>
+}
+

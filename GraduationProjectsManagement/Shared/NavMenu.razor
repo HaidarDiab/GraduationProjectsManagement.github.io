@@ -1,0 +1,111 @@
+﻿<div class="top-row ps-5 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">إدارة مشاريع التخرج</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+
+        <ul class="nav-item projectsnavul ps-md-5">
+            <li>
+                <NavLink class="nav-link ps-5" href="" Match="NavLinkMatch.All">
+                    الرئيسية<span class="oi oi-home px-3" aria-hidden="true"></span>
+                </NavLink>
+            </li>
+
+            <li>
+                <NavLink class="nav-link ps-5" href="/DisplayBlogs">
+                    المنتدى <span class="oi oi-chat px-3" aria-hidden="true"></span>
+                </NavLink>
+            </li>
+
+            <li>
+                <NavLink class="nav-link ps-5" href="/DisplayProjectsGroups">
+                    مجموعات <span class="oi oi-heart px-2" aria-hidden="true"></span>
+                </NavLink>
+            </li>
+
+            <li>
+                <NavLink class="nav-link ps-5" href="/DisplayInterviews">
+                    مقابلات <span class="oi oi-calendar px-3" aria-hidden="true"></span>
+                </NavLink>
+            </li>
+
+            <li>
+                <NavLink class="nav-link ps-3" href="Projects">
+                      المشاريع المعتمدة <span class="oi oi-project px-2" aria-hidden="true"></span>
+                </NavLink>
+            </li>
+
+            <li class="nav-item navbar-nav-scroll">
+                <ul class="">
+                    <li>
+                        <NavLink class="nav-link" href="/ProjectsEvaluations">
+                            <span>تقييمات المشاريع</span>
+                        </NavLink>
+                    </li>
+
+                    <li>
+                        <NavLink class="nav-link" href="/AddProposalProject">
+                            <span>إضافة مقترحات</span>
+                        </NavLink>
+                    </li>
+
+
+
+                    <li>
+                        <NavLink class="nav-link" href="/ProposalProjectsBySupervisors">
+                            <span>مقترحات المشرفين</span>
+                        </NavLink>
+                    </li>
+
+                    <li>
+                        <NavLink class="nav-link" href="/ProposalProjectsByStudents">
+                            <span>مقترحات الطلاب</span>
+                        </NavLink>
+                    </li>
+
+                    <li>
+                        <NavLink class="nav-link" href="/DisplayProjectCategories">
+                            <span>تصنيفات المشاريع</span>
+                        </NavLink>
+                    </li>
+
+                    <li>
+                        <NavLink class="nav-link" href="/DisplayPreviousProjects">
+                            <span>المشاريع السابقة</span>
+                        </NavLink>
+                    </li>
+
+                    <li class="nav-item">
+                        <NavLink class="nav-link ps-5" href="/DisplayMails">
+                            تواصل <span class="oi oi-phone" aria-hidden="true"></span>
+                        </NavLink>
+                    </li>
+
+                </ul>
+
+            </li>
+
+        </ul>
+
+    </nav>
+
+</div>
+
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

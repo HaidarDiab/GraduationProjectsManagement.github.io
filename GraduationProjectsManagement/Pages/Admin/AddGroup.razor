@@ -1,0 +1,57 @@
+﻿  @page "/AddGroup"
+@page "/UpdateGroup/{GroupId:int}"
+@inherits AddGroupBase
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="mb-5 form-group">
+    <h5 class="shadow-lg card-header">@Title </h5>
+
+    <hr class="shadow-lg" />
+</div>
+
+
+<EditForm Model="@ProjectGroup" OnValidSubmit="Save" class="offset-lg-8">
+
+     <DataAnnotationsValidator />
+
+
+
+    <div class="mb-3">
+        <label for="Name" class="form-label">اسم المجموعة</label>
+        <div class="shadow-lg">
+            <InputText class="form-control" @bind-Value="ProjectGroup.Name" Placeholder="Group 1" />
+        </div>
+        <ValidationMessage For="@(() => ProjectGroup.Name)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="ProjectId" class="form-label">المشروع</label>
+        <div class="shadow-lg">
+            <SfDropDownList TItem="Project" TValue="int" DataSource="@Projects" Placeholder="اختر مشروعاً...." @bind-Value="@ProjectGroup.ProjectId">
+                <DropDownListFieldSettings Text="Title" Value="Id">
+                </DropDownListFieldSettings>
+            </SfDropDownList>
+
+        </div>
+        <ValidationMessage For="@(() => ProjectGroup.ProjectId)" />
+    </div>
+
+
+        <div class="mb-3">
+        <label for="SupervisorId" class="form-label">المشرف</label>
+    <div class="shadow-lg">
+            <SfDropDownList TItem="IdentityUser" TValue="string" DataSource="@Supervisors" Placeholder="اختر مشرفاً...." @bind-Value="@ProjectGroup.SupervisorId">
+    <DropDownListFieldSettings Text="UserName" Value="Id"> </DropDownListFieldSettings>
+    </SfDropDownList>
+
+    </div>
+        <ValidationMessage For="@(() => ProjectGroup.SupervisorId)" />
+    </div>
+
+
+    <div class="form-group mb-5">
+        <button type="submit" class="btn btn-primary">حفظ</button>
+        <button class="btn btn-light" @onclick="Cancel">إلغاء</button>
+    </div>
+
+</EditForm>

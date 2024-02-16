@@ -1,0 +1,50 @@
+﻿@page "/DisplayProjectCategories"
+@inherits DisplayProjectCategoriesBase
+@attribute [Authorize]
+
+
+<div class="mb-5 form-group">
+    <h5 class="shadow-lg card-header"> تصنيف المشاريع</h5>
+    <h5 class="pagination">
+        <AuthorizeView Roles="Admin">
+            <Authorized>
+             <a href="/AddProjectCategory" class="btn btn-outline-primary">إضافة تصنيف مشروع</a>
+            </Authorized>
+        </AuthorizeView>
+    </h5>
+    <hr class="shadow-lg" />
+</div>
+
+
+
+
+<div class="row mt-2 shadow">
+
+    @foreach (var cate in ProjectCategories)
+    {
+
+        <div class="col-md-4 mb-5 shadow border border-white">
+            <i class="btn alert-primary card shadow">@cate.Id</i>
+
+            <div class="card btn alert-primary shadow">
+                <div class="card-body">
+                    <div class="card mb-1">
+
+                        <b class="alert-heading mb-2 border table-bordered">@cate.Name</b>
+                    </div>
+
+                    <AuthorizeView Roles="Admin">
+                        <Authorized>
+                            <a href="/UpdateProjectCategory/@cate.Id" class="btn btn-outline-primary col-3 card" role="button">تعديل</a>
+                            <a href="" class="btn btn-outline-danger col-3 card" role="button" @onclick="() => Delete(cate.Id)">حذف</a>
+
+                        </Authorized>
+                    </AuthorizeView>
+                </div>
+            </div>
+
+        </div>
+
+    }
+
+</div>

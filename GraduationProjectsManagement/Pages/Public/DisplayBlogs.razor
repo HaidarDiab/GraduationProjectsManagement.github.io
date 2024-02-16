@@ -1,0 +1,88 @@
+﻿@page "/DisplayBlogs"
+@inherits DisplayBlogsBase
+@attribute [Authorize]
+
+
+<div class="mb-5 form-group">
+    <h5 class="shadow-lg card-header">المنتدى</h5>
+    <div class="pagination">
+          
+        @if (CurrentUser.IsInRole("Admin") && !ProjectGroups.Any())
+        {
+            <a class="btn btn-dark alert-warning" role="button">لا يمكنك إضافة موضوع للنقاش حتى تقوم بإضافة مجموعات </a>
+        }
+
+        else if (CurrentUser.IsInRole("Supervisor") && !ProjectGroups.Any(pg => pg.SupervisorId == CurrentUserId))
+        {
+            <a class="btn btn-dark alert-warning" role="button">لا يمكنك إضافة موضوع للنقاش حتى تتم إضافتك إلى مجموعات من قبل الآدمن</a>
+        }
+
+        else if (CurrentUser.IsInRole("Student") && !StudentGroups.Any(st => st.StudentId == CurrentUserId))
+        {
+            <a class="btn btn-dark alert-warning" role="button">لا يمكنك إضافة موضوع للنقاش حتى تقوم باختيار مجموعة مشروع</a>
+        }
+
+        else
+        {
+            <a class="btn btn-dark alert-warning" role="button" href="/AddBlog">إضافة موضوع للنقاش</a>
+        }
+        
+    </div>
+    <hr class="shadow-lg" />
+</div>
+
+
+@if (!Blogs.Any())
+{
+    <h5 class="mb-5 card-body shadow">لا يوجد مواضيع مضافة حتى الآن....</h5>
+}
+
+else
+{
+    
+    var blogCount = Blogs.Count();
+
+    @if (blogCount > 0)
+    {
+        <div class="mb-3 form-group">
+
+            <h5 class="shadow-lg card-header"></h5>
+        </div>
+
+        <div class="row mt-3">
+
+            @foreach (var item in Blogs)
+            {
+                <div class="col-md-4 mb-4">
+                    <a href="/DisplayDiscussionBlog/@item.Id">
+                        <div class="card">
+                            <img class="img-thumbnail" src="/OIP.jpg" />
+                            <div class="card-body text-sm-center">
+                                <p class="card shadow">@item.Title</p>
+                                <bdi class="card shadow text-black text-sm-center text-decoration-none" style="font-size: 12px">@item.BlogDate.ToString("f")</bdi>
+                            </div>
+                            
+                        </div>
+                    </a>
+
+                    <div class="card shadow">
+                        @if (item.UserId == CurrentUserId || CurrentUser.IsInRole("Admin"))
+                        {
+                            <a href="/UpdateBlog/@item.Id" class="btn btn-outline-primary card " role="button">تعديل</a>
+                            <a class="btn btn-outline-danger card" role="button" @onclick="() => Delete(item.Id)">حذف</a>
+                        }
+                    </div>
+
+                </div>
+            }
+
+
+        </div>
+        <hr class="shadow-lg" />
+
+
+    }
+
+}
+
+

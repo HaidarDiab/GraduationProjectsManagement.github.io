@@ -1,0 +1,41 @@
+﻿@inherits LayoutComponentBase
+
+<PageTitle>إدارة مشاريع التخرج</PageTitle>
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row card-header" style="overflow-x: auto">
+
+            <LoginDisplay />
+
+
+                       <AuthorizeView Roles="Admin">
+                        <NotAuthorized>
+                        </NotAuthorized>
+                        <Authorized>
+                            <a href="/ControlPanel" class="">لوحة التحكم</a>
+                        </Authorized>
+                    </AuthorizeView>
+
+       
+                    <AuthorizeView>
+                        <Authorized>
+                            <Search />
+                        </Authorized>
+
+                        <NotAuthorized>
+
+                        </NotAuthorized>
+                    </AuthorizeView>
+        </div>
+
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>

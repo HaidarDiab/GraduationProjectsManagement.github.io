@@ -1,0 +1,46 @@
+﻿@page "/AddProjectEvaluation"
+@page "/UpdateProjectEvaluation/{ProjectEvaluationId:int}"
+@inherits AddProjectEvaluationBase
+@attribute [Authorize(Roles = "Supervisor")]
+
+
+<div class="mb-5 form-group">
+    <h5 class="shadow-lg card-header">@Title </h5>
+
+    <hr class="shadow-lg" />
+</div>
+
+
+    <EditForm Model="@ProjectEvaluation" OnValidSubmit="Save" class="offset-lg-8">
+
+     <DataAnnotationsValidator />
+
+
+    <div class="mb-3">
+        <label for="ProjectGroupId" class="form-label">المجموعة</label>
+        <div class="shadow-lg">
+            <SfDropDownList TItem="ProjectGroup" TValue="int" DataSource="@ProjectGroups" Placeholder="اختر مجموعة...." @bind-Value="@ProjectEvaluation.ProjectGroupId">
+                <DropDownListFieldSettings Text="Name" Value="Id">
+                </DropDownListFieldSettings>
+            </SfDropDownList>
+
+        </div>
+        <ValidationMessage For="@(() => ProjectEvaluation.ProjectGroupId)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="Grade" class="form-label">العلامة</label>
+        <div class="shadow-lg">
+                <InputNumber class="form-control" @bind-Value="ProjectEvaluation.Grade" />
+        </div>
+            <ValidationMessage For="@(() => ProjectEvaluation.Grade)" />
+    </div>
+
+
+        <div class="form-group mb-5">
+            <button type="submit" class="btn btn-primary">حفظ</button>
+            <button class="btn btn-light" @onclick="Cancel">إلغاء</button>
+        </div>
+    </EditForm>
+
+    

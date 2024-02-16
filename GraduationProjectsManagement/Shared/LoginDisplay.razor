@@ -1,0 +1,13 @@
+﻿<AuthorizeView>
+    <Authorized>
+        <form method="post" action="Identity/Account/LogOut">
+            <button type="submit" class="nav-link btn btn-link">خروج</button>
+        </form>
+        <a href="Identity/Account/Manage">@context.User.Identity?.Name</a>
+    </Authorized>
+    <NotAuthorized>
+        <a href="Identity/Account/Register">التسجيل</a>
+        <a href="Identity/Account/Login">تسجيل الدخول</a>
+    </NotAuthorized>
+</AuthorizeView>
+

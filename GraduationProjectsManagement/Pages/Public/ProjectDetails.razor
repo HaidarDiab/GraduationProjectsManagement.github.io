@@ -1,0 +1,81 @@
+﻿@page "/ProjectDetails/{ProjectId:int}"
+@inherits ProjectDetailsBase
+@attribute [Authorize]
+
+<div class="mb-5 form-group">
+    <h5 class="shadow-lg card-header">تفاصيل المشروع</h5>
+    <hr class="shadow-lg" />
+</div>
+
+
+@if (Project == null)
+{
+    <DisplaySpinner />
+}
+
+else
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-6">
+
+                <div>
+                    <img class="img-fluid" src="data:image/*;base64, @(Convert.ToBase64String(Project.ImageFile))">
+
+                </div>
+
+                <div>
+                    @if (CurrentUser.IsInRole("Admin"))
+                    {
+                        <a href="/UpdateProject/@Project.Id" class="btn btn-outline-primary col-2" role="button">تعديل</a>
+                        <a class="btn btn-outline-danger col-2" role="button" @onclick="() => Delete(ProjectId)">حذف</a>
+                    }
+                    else if ((Project.UserId == UserId))
+                    {
+                        if (Project.IsSelected == false)
+                        {
+                            <a href="/UpdateProject/@Project.Id" class="btn btn-outline-primary col-2" role="button">تعديل</a>
+                            <a class="btn btn-outline-danger col-2" role="button" @onclick="() => Delete(ProjectId)">حذف</a>
+                        }
+
+                        else
+                        {
+                            <a class="btn btn-outline-primary col-6" role="button">تم اعتماد المشروع لايمكنك التعديل أو الحذف</a>
+                        }
+                    }
+                </div>
+
+            </div>
+
+        
+            <div class="col-xl-6 card">
+                <h5 class="card-header shadow text-center">@Project.Title</h5>
+                <p class="mb-4"></p>
+                <p class="mb-4">
+                    <b>
+
+                    </b>
+                </p>
+
+                <table class="table table-hover table-bordered text-center shadow">
+                    <thead>
+                        <tr>
+                            <td>مالك المشروع</td>
+                            <td>تاريخ الإضافة</td>
+                            <td>الوصف</td>
+                        </tr>
+
+                    </thead>
+                    <tbody class="card-body">
+                        <tr>
+                            <td>@User.UserName</td>
+                            <td>@Project.AddedDate.ToString()</td>
+                            <td>@Project.Description</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+}

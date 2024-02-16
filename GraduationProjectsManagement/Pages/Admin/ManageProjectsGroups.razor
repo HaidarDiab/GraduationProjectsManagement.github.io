@@ -1,0 +1,18 @@
+﻿@page "/ManageProjectsGroups"
+@inherits ManageProjectsGroupsBase
+@attribute [Authorize(Roles ="Admin")]
+
+<div class="mb-5 form-group">
+    <h5 class="shadow-lg card-header">إدارة المجموعات</h5>
+
+    <hr class="shadow-lg" />
+</div>
+
+<div class="offset-8">
+    <div class="mb-3">
+        <a href="/AddGroup" class="btn btn-outline-primary card mb-2">إضافة مجموعة مشروع</a>
+        <a href="/DisplayProjectsGroups" class="btn btn-outline-primary card mb-2">عرض مجموعات المشاريع</a>
+    </div>
+</div>
+
+

@@ -1,0 +1,99 @@
+﻿@page "/DisplayDiscussionBlog/{blogId:int}"
+@inherits DisplayDiscussionBlogBase
+@attribute [Authorize]
+
+<div class="mb-4 form-group">
+    <h5 class="shadow-lg card-header text-md-center">@Blog.Title</h5>
+
+    <hr class="shadow-lg" />
+</div>
+
+@if (CurrentUser.IsInRole("Admin") || CurrentUser.IsInRole("Supervisor") || CurrentUser.IsInRole("Student"))
+{
+
+    <div class="container container-md">
+
+        <div class="blogContainer">
+
+            @foreach (var item in DiscussionsBlogs.OrderByDescending(db => db.AnswerDate))
+            {
+
+                <div class="card shadow border border-2 border-dark">
+
+                    <div class="mb-4 form-group">
+                        <div class="shadow card card-group alert-dark border border-1 border-dark" style="padding: 5px">
+
+                            @if (item.UserId == CurrentUserId)
+                            {
+                                <div class="shadow">
+                                    <a class="alert-danger btn-outline-danger" role="button" @onclick="() => Delete(item.Id)">
+                                        <i class="oi oi-delete">
+
+                                        </i>
+                                    </a>
+                                    <a class="alert-dark btn-outline-dark" role="button" @onclick="() => Update(item.Id)">
+
+                                        <i class="oi pointer-event oi-align-left">
+
+                                        </i>
+                                    </a>
+
+                                </div>
+                            }
+
+                            <div class="shadow alert-dark card card-header">
+                                <i class="oi oi-person">
+                                    <span class="link-danger">@Users.FirstOrDefault(u => u.Id == item.UserId).UserName</span>
+
+                                </i>
+                            </div>
+                            <div class="alert-dark card card-header">
+
+                                <span class="link-primary">@item.AnswerDate
+                                    <i class="oi oi-clock link-primary"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card card-body shadow alert-light">
+                            <p class="shadow card justify-content-md-center" style="padding: 8px">@item.Answer</p>
+                        </div>
+
+                    </div>
+                </div>
+                <hr class="shadow card" />
+            }
+
+      </div>
+
+        <div>
+
+            <EditForm Model="@DiscussionBlog" OnValidSubmit="Save" class="offset-lg-6">
+
+                <DataAnnotationsValidator />
+
+                <div class="mb-3 card shadow alert-dark btn btn-outline-primary">
+                    <label for="Answer" class="form-label"> </label>
+                    <div class="shadow-lg">
+                        <InputTextArea class="form-control text-xl-end" @bind-Value="DiscussionBlog.Answer" placeholder="اكتب رداً..."  />
+                    </div>
+                    <ValidationMessage For="@(() => DiscussionBlog.Answer)" />
+                </div>
+
+
+                <div class="form-group mb-5">
+                    <button type="submit" class="btn btn-primary">@ButtonTitle</button>
+                    <button class="btn btn-dark btn-outline-warning" @onclick="Cancel">إلغاء</button>
+                </div>
+            </EditForm>
+
+        </div>
+
+    </div>
+
+}
+
+else
+{
+    <div class="card alert-danger btn-outline-warning">يجب أن تنتظر حتى يتم منحك صلاحيات من قبل الآدمن</div>
+
+}

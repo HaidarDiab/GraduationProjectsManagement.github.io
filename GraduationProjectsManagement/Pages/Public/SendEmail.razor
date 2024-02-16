@@ -1,0 +1,63 @@
+﻿@page "/SendEmail"
+@inherits SendEmailBase
+@attribute [Authorize]
+
+
+<div class="mb-5 form-group">
+    <h5 class="shadow-lg card-header">إرسال بريد</h5>
+
+    <hr class="shadow-lg" />
+</div>
+
+@if (CurrentUser.IsInRole("Admin") || CurrentUser.IsInRole("Supervisor") || CurrentUser.IsInRole("Student"))
+{
+
+<EditForm Model="@SentMail" OnValidSubmit="SendEmail" class="offset-lg-8">
+
+    <DataAnnotationsValidator />
+
+
+       <div class="mb-3">
+            <label for="To" class="form-label">المرسل إليه</label>
+            <div class="shadow-lg">
+                <SfDropDownList TItem="IdentityUser" TValue="string" DataSource="@Users" Placeholder="اختر إيميل المستقبل...." @bind-Value="@SentMail.To">
+                    <DropDownListFieldSettings Text="UserName" Value="Email">
+                    </DropDownListFieldSettings>
+                </SfDropDownList>
+
+            </div>
+            <ValidationMessage For="@(() => SentMail.To)" />
+        </div>
+
+    <div class="mb-3">
+        <label for="Subject" class="form-label">الموضوع</label>
+        <div class="shadow-lg">
+            <InputText class="form-control" @bind-Value="SentMail.Subject" />
+        </div>
+        <ValidationMessage For="@(() => SentMail.Subject)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="Body" class="form-label">محتوى الإيميل</label>
+        <div class="shadow-lg">
+            <InputTextArea class="form-control" @bind-Value="SentMail.Body" />
+        </div>
+        <ValidationMessage For="@(() => SentMail.Body)" />
+    </div>
+
+
+
+    <div class="form-group mb-5">
+        <button type="submit" class="btn btn-primary">إرسال</button>
+            <button class="btn btn-dark btn-outline-warning" @onclick="Cancel">إلغاء</button>
+    </div>
+
+</EditForm>
+
+    }
+
+else
+{
+    <div class="card alert-danger btn-outline-warning">يجب أن تنتظر حتى يتم منحك صلاحيات من قبل الآدمن</div>
+
+}

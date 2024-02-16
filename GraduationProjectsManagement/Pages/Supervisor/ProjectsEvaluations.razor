@@ -1,0 +1,127 @@
+﻿@page "/ProjectsEvaluations"
+@inherits ProjectsEvaluationsBase
+@using GraduationProjectsManagement.Pages.Supervisor
+@attribute [Authorize]
+
+
+<div class="mb-5 form-group">
+    <h5 class="shadow-lg card-header">تقييمات المشاريع</h5>
+
+    @if (CurrentUser.IsInRole("Supervisor"))
+    {
+        <h5 class="pagination">
+            <a href="/AddProjectEvaluation" class="btn btn-outline-primary shadow border border-1 border-dark  card customButtonAndAlinkFontSize">إضافة تقييم</a>
+        </h5>
+    }
+    <hr class="shadow-lg" />
+</div>
+
+
+@if (!ProjectEvaluations.Any())
+{
+    <h5>لا يوجد تقييمات للمشاريع حتى الآن</h5>
+}
+
+else
+{
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-xl-2">
+            </div>
+
+            <div class="col-xl-10 card shadow alert-primary" style="overflow-x: auto">
+
+                <table class="table table-hover table-bordered text-center shadow overflow-auto">
+                    <thead class="card-header shadow">
+                        <tr>
+                            @if (CurrentUser.IsInRole("Supervisor"))
+                            {
+                                if (ProjectsGroups.Any(pg => pg.SupervisorId == CurrentUserId))
+                                {
+                                <th class="shadow border border-1 border-dark col-1"></th>
+                                    
+                                }
+                            }
+                            <th class="shadow border border-1 border-dark col-1">طلاب المجموعة</th>
+                            <th class="shadow border border-1 border-dark col-1">التقدير</th>
+                            <th class="shadow border border-1 border-dark col-1">التقييم </th>
+                            <th class="shadow border border-1 border-dark col-1">مجموعة المشروع</th>
+                            <th class="shadow border border-1 border-dark col-1">المشرف </th>
+                            <th class="shadow border border-1 border-dark col-1">عنوان المشروع</th>
+                        </tr>
+
+                    </thead>
+                    @foreach (var item in ProjectEvaluations)
+
+                    {
+
+                        <tbody>
+                            <tr>
+
+                                @if (CurrentUser.IsInRole("Supervisor"))
+                                {
+                                    if (SupervisorOwnerForGroupProject.Id == CurrentUserId)
+                                    {
+                                    <td class="shadow border border-1 border-dark col-1">
+                                        <a href="/UpdateProjectEvaluation/@item.Id" class="btn btn-outline-warning shadow border border-1 border-dark  card customButtonAndAlinkFontSize" role="button">تعديل التقييم</a>
+                                        <a class="btn btn-outline-danger shadow border border-1 border-dark  card customButtonAndAlinkFontSize" role="button" @onclick="() => Delete(item.Id)">حذف التقييم</a>
+                                    </td>
+                                        
+                                    }
+                                }
+
+                                <td class="shadow border border-1 border-dark col-1">
+                                    @foreach (var student in StudentGroups)
+                                    {
+                                        <ul>
+                                            <li class="list-group list-group-horizontal-md list-group-numbered list-group-item">@ProjectRepository.GetUsernameForStudentGroupByGroupId(student.ProjectGroupId, student.StudentId)</li>
+                                        </ul>
+                                    }
+                                </td>
+
+
+
+                                @if (item.Grade < 60)
+                                {
+                                    <td class="link-danger shadow border border-1 border-dark col-1">@item.GradeLevelName</td>
+                                    <td class="link-danger shadow border border-1 border-dark col-1">@item.Grade%</td>
+                                }
+                                else if (item.Grade > 60 && item.Grade < 75)
+                                {
+                                    <td class="link-success shadow border border-1 border-dark col-1">@item.GradeLevelName</td>
+                                    <td class="link-success shadow border border-1 border-dark col-1">@item.Grade%</td>
+                                }
+                                else if (item.Grade >= 75 && item.Grade < 85)
+                                {
+                                    <td class="link-warning shadow border border-1 border-dark col-1">@item.GradeLevelName</td>
+                                    <td class="link-warning shadow border border-1 border-dark col-1">@item.Grade%</td>
+                                }
+
+                                else if (item.Grade >= 85 && item.Grade < 95)
+                                {
+                                    <td class="link-info shadow border border-1 border-dark col-1">@item.GradeLevelName</td>
+                                    <td class="link-info shadow border border-1 border-dark col-1">@item.Grade%</td>
+                                }
+                                else
+                                {
+                                    <td class="link-primary shadow border border-1 border-dark col-1">@item.GradeLevelName</td>
+                                    <td class="link-primary shadow border border-1 border-dark col-1">@item.Grade%</td>
+                                }
+                                
+                                <td class="col-1 shadow border border-1 border-dark">@ProjectsGroups.FirstOrDefault(pg => pg.Id == item.ProjectGroupId).Name</td>
+                                <td class="col-1 shadow border border-1 border-dark">@ProjectRepository.GetSpecificSupervisorForGroup(item.Id)</td>
+                                <td class="col-1 shadow border border-1 border-dark">@ProjectRepository.GetSpecificProjectForGroupByProjectGroupId(item.ProjectGroupId)</td>
+                                
+
+                            </tr>
+                        </tbody>
+                    }
+                </table>
+
+
+            </div>
+        </div>
+    </div>
+}

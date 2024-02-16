@@ -1,0 +1,62 @@
+﻿@page "/AddBlog"
+@page "/UpdateBlog/{blogId:int}"
+@inherits AddBlogBase
+@attribute [Authorize]
+
+
+<div class="mb-5 form-group">
+    <h5 class="shadow-lg card-header">@Title</h5>
+
+    <hr class="shadow-lg" />
+</div>
+
+@if (CurrentUser.IsInRole("Admin") || CurrentUser.IsInRole("Supervisor") || CurrentUser.IsInRole("Student"))
+{
+
+    <EditForm Model="@Blog" OnValidSubmit="Save" class="offset-lg-8">
+
+        <DataAnnotationsValidator />
+
+        <div class="mb-3">
+            <label for="Title" class="form-label">عنوان النقاش</label>
+            <div class="shadow-lg">
+                <InputText class="form-control" @bind-Value="Blog.Title" />
+            </div>
+            <ValidationMessage For="@(() => Blog.Title)" />
+        </div>
+
+    <div class="mb-3">
+        <label for="Question" class="form-label">اطرح سؤالك</label>
+        <div class="shadow-lg">
+            <InputText class="form-control" @bind-Value="Blog.Question" />
+        </div>
+        <ValidationMessage For="@(() => Blog.Question)" />
+    </div>
+
+        <div class="mb-3">
+            <label for="ProjectCategoryId" class="form-label">مجموعة مشروع</label>
+            <div class="shadow-lg">
+                <SfDropDownList TItem="ProjectGroup" TValue="int" DataSource="@ProjectGroups" 
+                    Placeholder="اختر مجموعة مشروع...." @bind-Value="@Blog.ProjectGroupId">
+                    <DropDownListFieldSettings Text="Name" Value="Id">
+                    </DropDownListFieldSettings>
+                </SfDropDownList>
+
+            </div>
+            <ValidationMessage For="@(() => Blog.ProjectGroupId)" />
+        </div>
+
+        <div class="form-group mb-5">
+            <button type="submit" class="btn btn-primary">حفظ</button>
+            <button class="btn btn-light" @onclick="Cancel">إلغاء</button>
+        </div>
+
+    </EditForm>
+
+}
+
+else
+{
+    <div class="card alert-danger btn-outline-warning">يجب أن تنتظر حتى يتم منحك صلاحيات من قبل الآدمن</div>
+
+}

@@ -1,0 +1,40 @@
+﻿@page "/ProposalProjectsByStudents"
+@inherits ProposalProjectsByStudentsBase
+@attribute [Authorize]
+
+
+<div class="mb-5 form-group">
+    <h5 class="shadow-lg card-header">المشاريع المقترحة من قبل الطلاب</h5>
+    <hr class="shadow-lg" />
+</div>
+
+
+@if (Projects == null)
+{
+    <h5 class="mb-5 card-body shadow">لا يوجد مشاريع مضافة لهذا الفصل حتى الآن....</h5>
+}
+
+else
+{
+
+    var projectCount = Projects.Count();
+
+    @if (projectCount > 0)
+    {
+
+        @foreach (var projGroup in GetGroupedProjectsByCategory())
+        {
+            <div class="mb-3 form-group">
+
+                <h5 class="shadow-lg card-header">@GetCategoryName(projGroup)</h5>
+            </div>
+
+            <div class="row mt-3">
+                <DisplayProjects Projects="@projGroup"></DisplayProjects>
+            </div>
+            <hr class="shadow-lg" />
+        }
+
+    }
+
+}
